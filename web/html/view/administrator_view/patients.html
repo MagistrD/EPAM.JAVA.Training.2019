@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Patients</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            getAllPatients();
+        }, false);
+
+        function getAllPatients() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "/controller?command=patient");
+            xhr.setRequestHeader("Content-Type", "application/json");
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    resetPatient();
+                    var table = document.createElement('table');
+                    table.className = "table";
+                    var data = JSON.parse(xhr.responseText);
+
+                    for (var i = 0; i < data.length; i++) {
+
+                        var child = data[i];
+                        if (i === 0) {
+                            addHeadersToPatientTable(table, Object.keys(child));
+                        }
+                        var row = table.insertRow();
+                        Object.keys(child).forEach(function (k) {
+                            console.log(k);
+                            var cell = row.insertCell();
+                            cell.appendChild(document.createTextNode(child[k]));
+                        });
+                    }
+                    document.getElementById('patientsTable').appendChild(table);
+                }
+            };
+            xhr.send();
+        }
+
+        function addHeadersToPatientTable(table, keys) {
+            var row = table.insertRow();
+            for (var i = 0; i < keys.length; i++) {
+                var cell = row.insertCell();
+                cell.appendChild(document.createTextNode(keys[i]));
+            }
+        }
+
+        function resetPatient() {
+            document.getElementById('patientsTable').innerHTML = "";
+        }
+    </script>
+
+</head>
+<body class="container">
+<nav class="navbar navbar-dark bg-primary">
+    <a href="/html/view/administrator_view/staff.html" class="navbar-brand">Staff</a>
+    <a href="/html/view/administrator_view/patients.html" class="navbar-brand">Patients</a>
+    <a href="/html/view/administrator_view/medical_history_all.html" class="navbar-brand">Medical histories</a>
+    <a href="/html/view/administrator_view/specializations.html" class="navbar-brand">Specializations</a>
+</nav>
+</br>
+<div id="patientsTable"></div>
+</body>
+</html>

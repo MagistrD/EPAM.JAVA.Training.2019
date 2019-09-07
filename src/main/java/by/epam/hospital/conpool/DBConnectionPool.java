@@ -53,7 +53,7 @@ public class DBConnectionPool {
      * @param maxConn  max connection
      * @return instance
      */
-    static synchronized public DBConnectionPool
+    public static synchronized DBConnectionPool
     getInstance(final String url, final String user, final String password, final int maxConn) {
         if (instance == null) {
             instance = new DBConnectionPool(url, user, password, maxConn);

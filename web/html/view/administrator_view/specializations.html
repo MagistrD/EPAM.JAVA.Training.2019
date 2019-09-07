@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Specializations</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+
+    <script>
+        var id;
+        document.addEventListener('DOMContentLoaded', function () {
+            getAllSpec()
+        }, false);
+
+        function createSpec() {
+            var spec = new Object();
+            spec.specializationName = document.getElementById('specName').value;
+            spec.specializationType = document.getElementById('specType').value;
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/controller?command=specialization");
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    document.getElementById('specTable').innerHTML = xhr.responseText;
+                    resetSpec();
+                    getAllSpec();
+                }
+            };
+            xhr.send(JSON.stringify(spec));
+        }
+
+        function getAllSpec() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "/controller?command=specialization");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    resetSpec();
+                    var table = document.createElement('table');
+                    table.className = "table";
+                    var data = JSON.parse(xhr.responseText);
+
+                    for (var i = 0; i < data.length; i++) {
+
+                        var child = data[i];
+                        if (i === 0) {
+                            addHeadersToSpecTable(table, Object.keys(child));
+                        }
+                        var row = table.insertRow();
+                        Object.keys(child).forEach(function (k) {
+                            console.log(k);
+                            var cell = row.insertCell();
+                            cell.appendChild(document.createTextNode(child[k]));
+                        });
+                        //    Insert 'Update' and 'Delete' buttons
+                        var cellUpdate = row.insertCell();
+                        cellUpdate.innerHTML = '<button onclick="specToUpdate(this)" class="btn btn-success">To update</button>';
+                        var cellDelete = row.insertCell();
+                        cellDelete.innerHTML = '<button onclick="deleteSpec(this)" class="btn btn-danger">Delete</button>';
+                    }
+                    document.getElementById('specTable').appendChild(table);
+                }
+            };
+            xhr.send();
+        }
+
+        function addHeadersToSpecTable(table, keys) {
+            var row = table.insertRow();
+            for (var i = 0; i < keys.length; i++) {
+                var cell = row.insertCell();
+                cell.appendChild(document.createTextNode(keys[i]));
+            }
+        }
+
+        function resetSpec() {
+            document.getElementById('specTable').innerHTML = "";
+            document.getElementById('specName').innerHTML = "";
+        }
+
+        function specToUpdate(ths) {
+            var element = ths.parentNode.parentNode;
+            id = element.getElementsByTagName("td")[0].innerHTML;
+            document.getElementById('specName').value = element.getElementsByTagName("td")[1].innerHTML;
+            document.getElementById('specType').value = element.getElementsByTagName("td")[2].innerHTML;
+        }
+
+        function updateSpec() {
+            var spec = new Object();
+            var xhr = new XMLHttpRequest();
+
+            spec.staffSpecializationID = id;
+            spec.specializationName = document.getElementById('specName').value;
+            spec.specializationType = document.getElementById('specType').value;
+            xhr.open("PUT", "/controller?command=specialization");
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    alert("Specialization: " + id + " successfully update")
+                    resetSpec();
+                    getAllSpec();
+                }
+            };
+            xhr.send(JSON.stringify(spec));
+        }
+
+        function deleteSpec(ths) {
+            var element = ths.parentNode.parentNode;
+            id = element.getElementsByTagName("td")[0].innerHTML;
+            var xhr = new XMLHttpRequest();
+            xhr.open("DELETE", "/controller?command=specialization&id=" + id);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    alert("Staff: " + id + " successfully delete");
+                    resetSpec();
+                    getAllSpec();
+                }
+            };
+            xhr.send();
+
+        }
+
+    </script>
+</head>
+<body class="container">
+<nav class="navbar navbar-dark bg-primary">
+    <a href="/html/view/administrator_view/staff.html" class="navbar-brand">Staff</a>
+    <a href="/html/view/administrator_view/patients.html" class="navbar-brand">Patients</a>
+    <a href="/html/view/administrator_view/medical_history_all.html" class="navbar-brand">Medical histories</a>
+    <a href="/html/view/administrator_view/specializations.html" class="navbar-brand">Specializations</a>
+</nav>
+</br>
+
+<div class="row">
+    <div class="col-8" id="specTable"></div>
+
+    <div class="col-4">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Name and type</span>
+            </div>
+            <input type="text" class="form-control" id="specName">
+            <select id="specType" name="type" class="dropdown">
+                <option value="nur">Nurse</option>
+                <option value="doc">Doctor</option>
+            </select>
+            </br>
+            <button onclick="createSpec()" class="btn btn-primary">Add specialization</button>
+            <button onclick="updateSpec()" class="btn btn-success">Update Specialization</button>
+
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

@@ -77,7 +77,9 @@ public class AppointmentType {
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o) return true;
+        if (this == o) {
+            return true;
+        }
         if (o == null || getClass() != o.getClass()) return false;
         AppointmentType that = (AppointmentType) o;
         if (appointmentTypeID != that.appointmentTypeID) return false;

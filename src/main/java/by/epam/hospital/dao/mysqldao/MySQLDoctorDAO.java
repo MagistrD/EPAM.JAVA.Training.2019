@@ -80,8 +80,6 @@ public class MySQLDoctorDAO implements AbstractDAO<Integer, Doctor> {
             preparedStatement.close();
             connection.close();
         }
-
-
         return doctor;
     }
 
@@ -103,7 +101,6 @@ public class MySQLDoctorDAO implements AbstractDAO<Integer, Doctor> {
             b = true;
         } catch (SQLException e) {
             System.err.println("SQL exception (request or table failed): " + e);
-
         } finally {
             preparedStatement.close();
             connection.close();

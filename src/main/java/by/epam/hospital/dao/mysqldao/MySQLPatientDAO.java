@@ -5,10 +5,7 @@ import by.epam.hospital.dao.AbstractDAO;
 import by.epam.hospital.entities.Patient;
 import by.epam.hospital.config.ConfigurationManager;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -185,5 +182,40 @@ public class MySQLPatientDAO implements AbstractDAO<Integer, Patient> {
             connection.close();
         }
         return b;
+    }
+
+    /**
+     * create patient and return ID
+     *
+     * @param firstName  first name
+     * @param secondName second name
+     * @param surname    surname
+     * @return id
+     * @throws SQLException sql exception
+     */
+    public int createPatientAndReturnID(final String firstName, final String secondName, final String surname)
+            throws SQLException {
+        int id = -1;
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = CONNECTION_POOL.getConnection();
+            preparedStatement = connection.prepareStatement(ConfigurationManager.get("patient.insert"),
+                    Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1, firstName);
+            preparedStatement.setString(2, secondName);
+            preparedStatement.setString(3, surname);
+            preparedStatement.execute();
+            ResultSet resultSet = preparedStatement.getGeneratedKeys();
+            if (resultSet != null && resultSet.next()) {
+                id = resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.err.println("SQL exception (request or table failed): " + e);
+        } finally {
+            preparedStatement.close();
+            connection.close();
+        }
+        return id;
     }
 }

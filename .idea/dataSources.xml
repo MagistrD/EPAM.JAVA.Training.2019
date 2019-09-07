@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="epam_hospital@localhost" uuid="03008b44-67be-4e9c-b357-c6c9b7679c04">
+    <data-source source="LOCAL" name="epam_hospital@localhost" uuid="8eaaa414-627d-452e-b76e-5134877cd055">
       <driver-ref>mysql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://localhost:3306/epam_hospital</jdbc-url>
+      <jdbc-url>jdbc:mysql://localhost:3306/epam_hospital?serverTimezone=UTC&amp;useSSL=false</jdbc-url>
       <driver-properties>
         <property name="autoReconnect" value="true" />
         <property name="zeroDateTimeBehavior" value="convertToNull" />

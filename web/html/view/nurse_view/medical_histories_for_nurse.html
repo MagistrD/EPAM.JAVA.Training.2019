@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Medical histories</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            getAllPatientHistories();
+        }, false);
+
+
+        function getAllPatientHistories() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/history", false);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    document.getElementById("historiesOfThisNurse").innerHTML = "";
+                    var table = document.createElement('table');
+                    table.className = "table";
+                    var data = JSON.parse(xhr.responseText);
+                    for (var i = 0; i < data.length; i++) {
+                        var child = data[i];
+                        if (i === 0) {
+                            addHeaders(table, Object.keys(child));
+                        }
+                        var row = table.insertRow();
+                        Object.keys(child).forEach(function (k) {
+                            console.log(k);
+                            var cell = row.insertCell();
+                            cell.appendChild(document.createTextNode(child[k]));
+
+                        });
+                        var cellUpdate = row.insertCell();
+                        cellUpdate.innerHTML = '<button type="button" data-toggle="modal" data-target="#popupEditAppointment" onclick="toUpdate(this)" class="btn btn-success">Edit</button>';
+                    }
+                    document.getElementById('historiesOfThisNurse').appendChild(table);
+                }
+            };
+            xhr.send();
+        }
+
+        function addHeaders(table, keys) {
+            var row = table.insertRow();
+            for (var i = 0; i < keys.length; i++) {
+                var cell = row.insertCell();
+                cell.appendChild(document.createTextNode(keys[i]));
+            }
+        }
+
+        function getAppointment(id) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "/history?appointmentID=" + id, false)
+            xhr.setRequestHeader("Content-Type", "application/json")
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var data = JSON.parse(xhr.responseText);
+                    document.getElementById("appointName").value = data.description;
+                    document.getElementById("dateOfAppointment").value = data.appointment;
+                    document.getElementById("dateOdExecution").value = data.execution;
+                    if (data.appointmentTypeID === 1)
+                        document.getElementById("appointmentType").value = "procedure";
+                    else document.getElementById("appointmentType").value = "medicine";
+                    document.getElementById("executor").value = data.executorID;
+                }
+            };
+            xhr.send();
+        }
+
+        function toUpdate(ths) {
+            var element = ths.parentNode.parentNode;
+            id = element.getElementsByTagName("td")[7].innerHTML;
+            getAppointment(id);
+        }
+
+    </script>
+</head>
+<body class="container">
+<nav class="navbar navbar-dark bg-primary">
+    <form action="/logout" method="post">
+        <input type="submit" value="Logout" class="btn btn-primary">
+    </form>
+</nav>
+</br>
+<blockquote class="blockquote text-center">
+    <p class="mb-0">When you execute appointment - indicate the date</p>
+</blockquote>
+</br>
+<div>
+    <h5>Your appointments:</h5>
+    <table id="historiesOfThisNurse"></table>
+</div>
+<div class="modal fade " id="popupEditAppointment" tabindex="-1" role="dialog" aria-labelledby="popupLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="popupLabel">Edit appointment</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <label>Description</label><input type="text" id="appointName" readonly>
+                <label>Date of appointment</label><input type="date" id="dateOfAppointment" readonly>
+                <label>Date of execution</label><input type="date" id="dateOdExecution">
+                <label>Type</label><input type="text" id="appointmentType" readonly>
+                <label>Executor</label><input type="text" id="executor" readonly>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="editAppointment()">Edit</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

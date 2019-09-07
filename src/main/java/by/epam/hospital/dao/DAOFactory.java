@@ -1,7 +1,5 @@
 package by.epam.hospital.dao;
 
-import by.epam.hospital.dao.mysqldao.MySQLAppointmentDAO;
-
 /**
  * Abstract class DAO Factory
  */
@@ -39,7 +37,7 @@ public abstract class DAOFactory {
      *
      * @return DAO for Appointment
      */
-    public abstract MySQLAppointmentDAO getAppointment();
+    public abstract AbstractDAO getAppointment();
 
     /**
      * DAO for Medical history
@@ -47,6 +45,21 @@ public abstract class DAOFactory {
      * @return DAO for Medical history
      */
     public abstract AbstractDAO getMedicalHistory();
+
+
+    /**
+     * DAO for Staff specializations
+     *
+     * @return DAO for Staff specializations
+     */
+    public abstract AbstractDAO getStaffSpecialization();
+
+    /**
+     * DAO for Appointment type
+     *
+     * @return DAO for Appointment type
+     */
+    public abstract AbstractDAO getAppointmentType();
 
     /**
      * method for getting DAO

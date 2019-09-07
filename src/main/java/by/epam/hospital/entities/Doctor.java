@@ -7,17 +7,6 @@ public class Doctor extends Staff {
 
     private int doctorID;
 
-    /**
-     * Constructor with parameters
-     *
-     * @param firstName  first name
-     * @param secondName second name
-     * @param surname    surname
-     * @param staffType  type
-     */
-    public Doctor(final String firstName, final String secondName, final String surname, final int staffType) {
-        super(firstName, secondName, surname, staffType);
-    }
 
     /**
      * Constructor with parameters
@@ -30,8 +19,7 @@ public class Doctor extends Staff {
      */
     public Doctor(final int doctorID, final String firstName, final String secondName, final String surname,
                   final int staffType) {
-        super(firstName, secondName, surname, staffType);
-        this.doctorID = doctorID;
+        super(doctorID, firstName, secondName, surname, staffType);
     }
 
     /**

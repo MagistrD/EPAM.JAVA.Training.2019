@@ -1,6 +1,7 @@
 package by.epam.hospital.entities;
 
-import java.util.Date;
+
+import java.sql.Date;
 
 /**
  * entity Appointment

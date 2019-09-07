@@ -20,7 +20,6 @@ public class MySQLStaffDAO implements AbstractDAO<Integer, Staff> {
     private static final DBConnectionPool CONNECTION_POOL = new DBConnectionPool(ConfigurationManager.get("db.url"),
             ConfigurationManager.get("db.login"), ConfigurationManager.get("db.password"), 16);
 
-
     /**
      * Select all staff
      *
@@ -41,7 +40,7 @@ public class MySQLStaffDAO implements AbstractDAO<Integer, Staff> {
                 String secondName = resultSet.getString(3);
                 String surname = resultSet.getString(4);
                 int specialization = resultSet.getInt(5);
-                staffList.add(new Staff(firstName, secondName, surname, specialization));
+                staffList.add(new Staff(id, firstName, secondName, surname, specialization));
             }
         } catch (SQLException e) {
             System.err.println("SQL exception in 'Staff select all'" + e);
@@ -49,7 +48,7 @@ public class MySQLStaffDAO implements AbstractDAO<Integer, Staff> {
             preparedStatement.close();
             connection.close();
         }
-        return null;
+        return staffList;
     }
 
     /**
@@ -68,13 +67,13 @@ public class MySQLStaffDAO implements AbstractDAO<Integer, Staff> {
             connection = CONNECTION_POOL.getConnection();
             preparedStatement = connection.prepareStatement(ConfigurationManager.get("" + id));
             ResultSet resultSet = preparedStatement.executeQuery();
-
+            int staffID = resultSet.getInt(1);
             String firstName = resultSet.getString(2);
             String secondName = resultSet.getString(3);
             String surname = resultSet.getString(4);
             int specialization = resultSet.getInt(5);
 
-            staff = new Staff(firstName, secondName, surname, specialization);
+            staff = new Staff(staffID, firstName, secondName, surname, specialization);
         } catch (SQLException e) {
             System.err.println("SQL exception (request or table failed): " + e);
         } finally {
@@ -98,7 +97,7 @@ public class MySQLStaffDAO implements AbstractDAO<Integer, Staff> {
 
         try {
             connection = CONNECTION_POOL.getConnection();
-            preparedStatement = connection.prepareStatement(ConfigurationManager.get("staff.delete.by.id" + id));
+            preparedStatement = connection.prepareStatement(ConfigurationManager.get("staff.delete.by.id") + id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             System.err.println("SQL exception (request or table failed): " + e);
@@ -120,7 +119,6 @@ public class MySQLStaffDAO implements AbstractDAO<Integer, Staff> {
         boolean b = false;
         Connection connection = null;
         PreparedStatement preparedStatement = null;
-
         try {
             connection = CONNECTION_POOL.getConnection();
             //------------------------------
@@ -154,6 +152,7 @@ public class MySQLStaffDAO implements AbstractDAO<Integer, Staff> {
             preparedStatement.setString(3, object.getSurname());
             preparedStatement.setInt(4, object.getStaffType());
             preparedStatement.execute();
+            b = true;
         } catch (SQLException e) {
             System.err.println("SQL exception (request or table failed): " + e);
         } finally {
@@ -180,17 +179,17 @@ public class MySQLStaffDAO implements AbstractDAO<Integer, Staff> {
         PreparedStatement preparedStatement = null;
         try {
             connection = CONNECTION_POOL.getConnection();
-            preparedStatement = connection.prepareStatement(ConfigurationManager.get("staff.update"));
+            int id = object.getStaffID();
+            preparedStatement = connection.prepareStatement(ConfigurationManager.get("staff.update") + id);
             preparedStatement.setString(1, object.getFirstName());
             preparedStatement.setString(2, object.getSecondName());
             preparedStatement.setString(3, object.getSurname());
             preparedStatement.setInt(4, object.getStaffType());
             preparedStatement.executeUpdate();
+            b = true;
         } catch (SQLException e) {
             System.err.println("SQL exception (request or table failed): " + e);
         }
-
-        return false;
+        return b;
     }
-
 }

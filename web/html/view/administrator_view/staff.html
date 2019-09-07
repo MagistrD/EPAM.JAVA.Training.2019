@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Staff</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+    <script>
+
+        var id;
+
+        document.addEventListener('DOMContentLoaded', function () {
+            getAllStaff();
+            staffTypeToDropDown();
+        }, false);
+
+        function create() {
+            var staff = new Object();
+            //staff.id = document.getElementById('id').value;
+            staff.firstName = document.getElementById('firstName').value;
+            staff.secondName = document.getElementById('secondName').value;
+            staff.surname = document.getElementById('surname').value;
+            staff.staffType = document.getElementById('staffType').value;
+
+            var xhr = new XMLHttpRequest();   // new HttpRequest instance
+            xhr.open("POST", "/controller?command=staff", false);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    document.getElementById('isCreate').innerHTML = xhr.responseText;
+                    reset();
+                    getAllStaff();
+                }
+            };
+            xhr.send(JSON.stringify(staff));
+        }
+
+        function getAllStaff() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "/controller?command=staff", false);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    reset();
+                    var table = document.createElement('table');
+                    table.className = "table";
+                    var data = JSON.parse(xhr.responseText);
+                    for (var i = 0; i < data.length; i++) {
+                        var child = data[i];
+                        if (i === 0) {
+                            addHeaders(table, Object.keys(child));
+                        }
+                        var row = table.insertRow();
+                        Object.keys(child).forEach(function (k) {
+                            console.log(k);
+                            var cell = row.insertCell();
+                            cell.appendChild(document.createTextNode(child[k]));
+                        });
+                        //    Insert 'Update' and 'Delete' buttons
+                        var cellUpdate = row.insertCell();
+                        cellUpdate.innerHTML = '<button onclick="objectToUpdate(this)" class="btn btn-success">To update</button>';
+                        var cellDelete = row.insertCell();
+                        cellDelete.innerHTML = '<button onclick="deleteStaff(this)" class="btn btn-danger">Delete</button>';
+                    }
+                    document.getElementById('container').appendChild(table);
+                }
+            };
+            xhr.send();
+        }
+
+        function addHeaders(table, keys) {
+            var row = table.insertRow();
+            for (var i = 0; i < keys.length; i++) {
+                var cell = row.insertCell();
+                cell.appendChild(document.createTextNode(keys[i]));
+            }
+        }
+
+        function deleteStaff(ths) {
+            var element = ths.parentNode.parentNode;
+            var id = element.getElementsByTagName("td")[3].innerHTML;
+            id = id;
+            var xhr = new XMLHttpRequest();
+            xhr.open("DELETE", "/controller?command=staff&id=" + id, false);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    reset();
+                    alert("Staff: " + id + " successfully delete");
+                }
+            };
+            xhr.send();
+            reset();
+            getAllStaff();
+        }
+
+        function objectToUpdate(ths) {
+            var element = ths.parentNode.parentNode;
+
+            id = element.getElementsByTagName("td")[3].innerHTML;
+            document.getElementById('firstName').value = element.getElementsByTagName("td")[0].innerHTML;
+            document.getElementById('secondName').value = element.getElementsByTagName("td")[1].innerHTML;
+            document.getElementById('surname').value = element.getElementsByTagName("td")[2].innerHTML;
+            document.getElementById('staffType').value = element.getElementsByTagName("td")[4].innerHTML;
+        }
+
+        function updateStaff() {
+            var xhr = new XMLHttpRequest();
+            var staff = new Object();
+            staff.staffID = id;
+            staff.firstName = document.getElementById('firstName').value;
+            staff.secondName = document.getElementById('secondName').value;
+            staff.surname = document.getElementById('surname').value;
+            staff.staffType = document.getElementById('staffType').value;
+            xhr.open("PUT", "/controller?command=staff", false);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    alert("Staff: " + id + " successfully update")
+                    reset();
+                    getAllStaff();
+                }
+            };
+            xhr.send(JSON.stringify(staff));
+        }
+
+        function reset() {
+            document.getElementById('container').innerHTML = "";
+            document.getElementById('firstName').innerHTML = "";
+            document.getElementById('secondName').innerHTML = "";
+            document.getElementById('surname').innerHTML = "";
+        }
+
+        function staffTypeToDropDown() {
+            var dropdown = document.getElementById('staffType');
+            dropdown.length = 0;
+            dropdown.selectedIndex = 0;
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "/controller?command=specialization", false);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function () {
+                if (xhr.status === 200) {
+                    var data = JSON.parse(xhr.responseText);
+                    var option;
+                    for (var i = 0; i < data.length; i++) {
+                        option = document.createElement('option');
+                        option.text = data[i].specializationType;
+                        option.value = data[i].staffSpecializationID;
+                        dropdown.add(option);
+                    }
+                }
+            };
+            xhr.send();
+        }
+    </script>
+
+</head>
+<body class="container">
+<nav class="navbar navbar-dark bg-primary">
+    <a href="/html/view/administrator_view/staff.html" class="navbar-brand">Staff</a>
+    <a href="/html/view/administrator_view/patients.html" class="navbar-brand">Patients</a>
+    <a href="/html/view/administrator_view/medical_history_all.html" class="navbar-brand">Medical histories</a>
+    <a href="/html/view/administrator_view/specializations.html" class="navbar-brand">Specializations</a>
+</nav>
+</br>
+<div class="input-group">
+    <div class="input-group-prepend">
+        <span class="input-group-text">First name, second name and surname</span>
+    </div>
+    <input type="text" class="form-control" id="firstName">
+    <input type="text" class="form-control" id="secondName">
+    <input type="text" class="form-control" id="surname">
+    <select class="dropdown" id="staffType" name="type" ></select>
+
+</div>
+<div>
+    <button onclick="create()" class="btn">Add</button>
+    <button onclick="updateStaff()" class="btn btn-success">Update</button>
+</div>
+
+<div id="isCreate"></div>
+<div>
+    <div id="container"></div>
+</div>
+</body>
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Medical histories</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+    <script>
+        var id;
+
+        document.addEventListener('DOMContentLoaded', function () {
+            patientsToDropDown();
+            doctorsToDropdown();
+            nursesToDropDown();
+            appointmentTypeToDropDown();
+            allHistories();
+        }, false);
+
+
+        function patientsToDropDown() {
+            var dropdown = document.getElementById('patients');
+            dropdown.length = 0;
+            dropdown.selectedIndex = 0;
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "/controller?command=patient", false)
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var data = JSON.parse(xhr.responseText);
+                    var option;
+                    for (var i = 0; i < data.length; i++) {
+                        option = document.createElement('option');
+                        option.text = data[i].firstName + " " + data[i].secondName + " " + data[i].surname;
+                        option.value = data[i].patientID;
+                        dropdown.add(option);
+                    }
+                }
+            };
+            xhr.send();
+        }
+
+        function doctorsToDropdown() {
+            var dropdown = document.getElementById('doctors');
+            dropdown.length = 0;
+            dropdown.selectedIndex = 0;
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "/controller?command=doctor", false)
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var data = JSON.parse(xhr.responseText);
+                    var option;
+                    for (var i = 0; i < data.length; i++) {
+                        option = document.createElement('option');
+                        option.text = data[i].firstName + " " + data[i].secondName + " " + data[i].surname;
+                        option.value = data[i].staffID;
+                        dropdown.add(option);
+                    }
+                }
+            };
+            xhr.send();
+        }
+
+        function nursesToDropDown() {
+            var dropdown = document.getElementById('executor');
+            dropdown.length = 0;
+            dropdown.selectedIndex = 0;
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "/controller?command=nurse", false);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var data = JSON.parse(xhr.responseText);
+                    var option;
+                    for (var i = 0; i < data.length; i++) {
+                        option = document.createElement('option');
+                        option.text = data[i].firstName + " " + data[i].secondName + " " + data[i].surname;
+                        option.value = data[i].staffID;
+                        dropdown.add(option);
+                    }
+                }
+            };
+            xhr.send();
+        }
+
+        function appointmentTypeToDropDown() {
+            var dropdown = document.getElementById('appointmentType');
+            dropdown.length = 0;
+            dropdown.selectedIndex = 0;
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "/controller?command=appointmenttype", false)
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var data = JSON.parse(xhr.responseText);
+                    var option;
+                    for (var i = 0; i < data.length; i++) {
+                        option = document.createElement('option');
+                        option.text = data[i].appointmentTypeName;
+                        option.value = data[i].appointmentTypeID;
+                        dropdown.add(option);
+                    }
+                }
+            };
+            xhr.send();
+        }
+
+        function addHistory() {
+            var medicalHistory = new Object();
+            medicalHistory.patientID = document.getElementById('patients').value;
+            medicalHistory.diagnosedID = document.getElementById('doctors').value;
+            medicalHistory.dateOfReceipt = document.getElementById('dateOfReceipt').value;
+            medicalHistory.dateOfDischarge = document.getElementById('dischargedDate').value;
+            medicalHistory.diagnosis = document.getElementById('diagnosis').value;
+            medicalHistory.comment = document.getElementById('comment').value;
+            medicalHistory.appointmentID = document.getElementById('appointment').value;
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/controller?command=medicalhistory", false);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    alert("Medical history successfully add!");
+                }
+            };
+            xhr.send(JSON.stringify(medicalHistory));
+        }
+
+        function addAppointment() {
+            var appointment = new Object();
+            appointment.description = document.getElementById('appointName').value;
+            appointment.appointment = document.getElementById('dateOfAppointment').value;
+            appointment.execution = document.getElementById('dateOdExecution').value;
+            appointment.appointmentTypeID = document.getElementById('appointmentType').value;
+            appointment.executorID = document.getElementById('executor').value;
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/controller?command=appointment", false);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    alert("Appointment successfully add!");
+                    document.getElementById('appointment').value = JSON.parse(xhr.responseText);
+                }
+            };
+            xhr.send(JSON.stringify(appointment));
+        }
+
+        function allHistories() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "/controller?command=history", false);
+            xhr.onreadystatechange = function () {
+                // reset();
+                var table = document.createElement('table');
+                table.className = "table";
+                var data = JSON.parse(xhr.responseText);
+                for (var i = 0; i < data.length; i++) {
+                    var child = data[i];
+                    if (i === 0) {
+                        addHeaders(table, Object.keys(child));
+                    }
+                    var row = table.insertRow();
+                    Object.keys(child).forEach(function (k) {
+                        console.log(k);
+                        var cell = row.insertCell();
+                        cell.appendChild(document.createTextNode(child[k]));
+                    });
+                    //    Insert 'Update' and 'Delete' buttons
+
+                    var cellUpdate = row.insertCell();
+                    cellUpdate.innerHTML = '<button onclick="objectToUpdate(this)" class="btn btn-success">Edit</button>';
+
+                }
+                document.getElementById('tableHistory').appendChild(table);
+            };
+            xhr.send();
+        }
+
+        function addHeaders(table, keys) {
+            var row = table.insertRow();
+            for (var i = 0; i < keys.length; i++) {
+                var cell = row.insertCell();
+                cell.appendChild(document.createTextNode(keys[i]));
+            }
+        }
+
+        function objectToUpdate(ths) {
+            var element = ths.parentNode.parentNode;
+            id = element.getElementsByTagName("td")[0].innerHTML;
+            document.getElementById("patients").value = element.getElementsByTagName("td")[1].innerHTML;
+            document.getElementById("doctors").value = element.getElementsByTagName("td")[2].innerHTML;
+            document.getElementById("dateOfReceipt").value = element.getElementsByTagName("td")[3].innerHTML;
+            document.getElementById("dischargedDate").value = element.getElementsByTagName("td")[4].innerHTML;
+            document.getElementById("diagnosis").value = element.getElementsByTagName("td")[5].innerHTML;
+            document.getElementById("comment").value = element.getElementsByTagName("td")[6].innerHTML;
+            document.getElementById("appointment").value = element.getElementsByTagName("td")[7].innerHTML;
+        }
+
+        function reset() {
+            document.getElementById("")
+        }
+
+    </script>
+</head>
+
+<body class="container">
+<nav class="navbar navbar-dark bg-primary">
+    <a href="/html/view/administrator_view/staff.html" class="navbar-brand">Staff</a>
+    <a href="/html/view/administrator_view/patients.html" class="navbar-brand">Patients</a>
+    <a href="/html/view/administrator_view/medical_history_all.html" class="navbar-brand">Medical histories</a>
+    <a href="/html/view/administrator_view/specializations.html" class="navbar-brand">Specializations</a>
+</nav>
+</br>
+<div>
+    <div>
+        <label for="patients">Patient</label><select id="patients" name="patients"></select>
+        <label for="doctors">Doctor</label><select id="doctors" name="doctors"></select>
+    </div>
+    <div>
+        <label for="dateOfReceipt">Date of receipt</label><input type="date" id="dateOfReceipt">
+        <label for="dischargedDate">Date of discharge</label><input type="date" id="dischargedDate">
+    </div>
+    <div>
+        <label for="diagnosis">Diagnosis</label><input type="text" id="diagnosis">
+        <label for="comment">Comments</label><input type="text" id="comment">
+    </div>
+
+    <input type="text" id="appointment" readonly>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#popupAddAppointment">Add
+        appointment
+    </button>
+
+    <div class="modal fade " id="popupAddAppointment" tabindex="-1" role="dialog" aria-labelledby="popupLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="popupLabel">Add appointment</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <label>Description</label><input type="text" id="appointName">
+                    <label>Date of appointment</label><input type="date" id="dateOfAppointment">
+                    <label>Date of execution</label><input type="date" id="dateOdExecution">
+                    <select id="appointmentType" name="appointmentType"></select>
+                    <select id="executor" name="executor"></select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="addAppointment()">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div>
+    <button onclick="addHistory()" class="btn">Add</button>
+    <button onclick="updateHistory()" class="btn btn-success">Update</button>
+</div>
+<div id="tableHistory">
+</div>
+
+</body>
+</html>

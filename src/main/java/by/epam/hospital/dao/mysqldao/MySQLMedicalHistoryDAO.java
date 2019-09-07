@@ -10,7 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 /**
@@ -158,11 +158,15 @@ public class MySQLMedicalHistoryDAO implements AbstractDAO<Integer, MedicalHisto
             preparedStatement = connection.prepareStatement(ConfigurationManager.get("medical.history.insert"));
             preparedStatement.setInt(1, object.getPatientID());
             preparedStatement.setInt(2, object.getDiagnosedID());
-            preparedStatement.setDate(3, (java.sql.Date) object.getDateOfReceipt());
-            preparedStatement.setDate(4, (java.sql.Date) object.getDateOfDischarge());
+            preparedStatement.setDate(3, object.getDateOfReceipt());
+            preparedStatement.setDate(4, object.getDateOfDischarge());
             preparedStatement.setString(5, object.getDiagnosis());
             preparedStatement.setString(6, object.getComment());
-            preparedStatement.setInt(7, object.getAppointmentID());
+            if (object.getAppointmentID() == 0) {
+                preparedStatement.setNull(7, object.getAppointmentID());
+            } else {
+                preparedStatement.setInt(7, object.getAppointmentID());
+            }
             preparedStatement.execute();
             b = true;
         } catch (SQLException e) {
@@ -205,5 +209,55 @@ public class MySQLMedicalHistoryDAO implements AbstractDAO<Integer, MedicalHisto
             connection.close();
         }
         return b;
+    }
+
+    /**
+     * get medical histories for choose staff of patient
+     *
+     * @param type     user type
+     * @param subType  staff subtype
+     * @param idOfUser id
+     * @return list of medical histories
+     * @throws SQLException sql exception
+     */
+    public List<MedicalHistory> getAllHistoryFor(final String type, final int subType, final int idOfUser)
+            throws SQLException {
+        List<MedicalHistory> medicalHistoryList = new ArrayList<MedicalHistory>();
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = CONNECTION_POOL.getConnection();
+            if (type.equals("patient")) {
+                preparedStatement = connection.prepareStatement(
+                        ConfigurationManager.get("medical.history.select.for.patient") + idOfUser);
+            } else if (type.equals("staff") && subType > 2) {
+                preparedStatement = connection.prepareStatement(
+                        ConfigurationManager.get("medical.history.select.for.doctor") + idOfUser);
+            } else if (type.equals("staff") && subType == 2) {
+                preparedStatement = connection.prepareStatement(
+                        ConfigurationManager.get("medical.history.select.for.nurse") + idOfUser);
+            }
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                int id = resultSet.getInt(1);
+                int patientID = resultSet.getInt(2);
+                int diagnosedID = resultSet.getInt(3);
+                Date dateOfReceipt = resultSet.getDate(4);
+                Date dateOdDischarged = resultSet.getDate(5);
+                String diagnosis = resultSet.getString(6);
+                String comment = resultSet.getString(7);
+                int appointmentID = resultSet.getInt(8);
+                medicalHistoryList.add(new MedicalHistory(id, patientID, diagnosedID, dateOfReceipt,
+                        dateOdDischarged, diagnosis, comment, appointmentID));
+            }
+        } catch (
+                SQLException e) {
+            System.err.println("SQL exception in 'Staff select all'" + e);
+        } finally {
+            preparedStatement.close();
+            connection.close();
+        }
+        return medicalHistoryList;
     }
 }

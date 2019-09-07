@@ -155,6 +155,7 @@ public class MySQLNurseDAO implements AbstractDAO<Integer, Nurse> {
             preparedStatement.setString(3, object.getSurname());
             preparedStatement.setInt(4, object.getStaffType());
             preparedStatement.execute();
+            b = true;
         } catch (SQLException e) {
             System.err.println("SQL exception (request or table failed): " + e);
         } finally {

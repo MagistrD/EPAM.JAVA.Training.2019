@@ -16,6 +16,20 @@ public class StaffSpecialization {
     }
 
     /**
+     * contructor with parameters
+     *
+     * @param staffSpecializationID staff specialization id
+     * @param specializationType    specialization type
+     * @param specializationName    specialization name
+     */
+    public StaffSpecialization(final int staffSpecializationID, final String specializationType,
+                               final String specializationName) {
+        this.staffSpecializationID = staffSpecializationID;
+        this.specializationType = specializationType;
+        this.specializationName = specializationName;
+    }
+
+    /**
      * constructor with parameters
      *
      * @param specializationType spec. type
@@ -25,6 +39,7 @@ public class StaffSpecialization {
         this.specializationType = specializationType;
         this.specializationName = specializationName;
     }
+
 
     /**
      * getter for spec. ID
@@ -78,5 +93,23 @@ public class StaffSpecialization {
                 + ", specialization type='" + specializationType + '\''
                 + ", specialization name='" + specializationName + '\''
                 + '}';
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        StaffSpecialization that = (StaffSpecialization) o;
+        if (staffSpecializationID != that.staffSpecializationID) return false;
+        if (!specializationType.equals(that.specializationType)) return false;
+        return specializationName.equals(that.specializationName);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = staffSpecializationID;
+        result = 31 * result + specializationType.hashCode();
+        result = 31 * result + specializationName.hashCode();
+        return result;
     }
 }

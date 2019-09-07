@@ -1,7 +1,7 @@
 package by.epam.hospital.entities;
 
 
-import java.util.Date;
+import java.sql.Date;
 
 /**
  * entity that describe Medical history
@@ -39,6 +39,29 @@ public class MedicalHistory {
                           final Date dateOfReceipt, final Date dateOfDischarge, final String diagnosis,
                           final String comment, final int appointmentID) {
         this.medicalHistoryID = medicalHistoryID;
+        this.patientID = patientID;
+        this.diagnosedID = diagnosedID;
+        this.dateOfReceipt = dateOfReceipt;
+        this.dateOfDischarge = dateOfDischarge;
+        this.diagnosis = diagnosis;
+        this.comment = comment;
+        this.appointmentID = appointmentID;
+    }
+
+    /**
+     * constructor with parameters
+     *
+     * @param patientID       id
+     * @param diagnosedID     doctor
+     * @param dateOfReceipt   date of receipt
+     * @param dateOfDischarge date of discharged
+     * @param diagnosis       diagnosis
+     * @param comment         comment
+     * @param appointmentID   appointment id
+     */
+    public MedicalHistory(final int patientID, final int diagnosedID, final Date dateOfReceipt,
+                          final Date dateOfDischarge, final String diagnosis, final String comment,
+                          final int appointmentID) {
         this.patientID = patientID;
         this.diagnosedID = diagnosedID;
         this.dateOfReceipt = dateOfReceipt;

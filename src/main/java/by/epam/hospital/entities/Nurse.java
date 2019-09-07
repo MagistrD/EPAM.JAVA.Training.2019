@@ -18,8 +18,7 @@ public class Nurse extends Staff {
      */
     public Nurse(final int nurseID, final String firstName, final String secondName, final String surname,
                  final int staffType) {
-        super(firstName, secondName, surname, staffType);
-        this.nurseID = nurseID;
+        super(nurseID, firstName, secondName, surname, staffType);
     }
 
     /**

@@ -76,9 +76,10 @@ public class MySQLDAOFactory extends DAOFactory {
      *
      * @return MySQLAppointmentDAO
      */
-    public MySQLAppointmentDAO getAppointment() {
+    public AbstractDAO getAppointment() {
         return new MySQLAppointmentDAO();
     }
+
 
     /**
      * get Medical history
@@ -88,4 +89,23 @@ public class MySQLDAOFactory extends DAOFactory {
     public AbstractDAO getMedicalHistory() {
         return new MySQLMedicalHistoryDAO();
     }
+
+    /**
+     * get Staff specialization
+     *
+     * @return MySQLSpecializationDAO
+     */
+    public AbstractDAO getStaffSpecialization() {
+        return new MySQLSpecializationDAO();
+    }
+
+    /**
+     * get appointment type
+     *
+     * @return MySQLAppointmentTypeDAO
+     */
+    public AbstractDAO getAppointmentType() {
+        return new MySQLAppointmentTypeDAO();
+    }
+
 }
