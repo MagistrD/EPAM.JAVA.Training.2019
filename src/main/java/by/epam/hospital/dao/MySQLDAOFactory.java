@@ -26,9 +26,17 @@ public class MySQLDAOFactory extends DAOFactory {
     /**
      * constructor
      */
+//    public MySQLDAOFactory() {
+//        try {
+//            String driver = ConfigurationManager.get("mysql.driver");
+//            Class.forName(driver);
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//    }
     public MySQLDAOFactory() {
         try {
-            String driver = ConfigurationManager.get("mysql.driver");
+            String driver = ConfigurationManager.get("postgres.driver");
             Class.forName(driver);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

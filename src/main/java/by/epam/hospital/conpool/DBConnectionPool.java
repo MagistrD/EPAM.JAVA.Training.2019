@@ -13,7 +13,8 @@ import java.util.Iterator;
  * Connection pool
  */
 public class DBConnectionPool {
-    private static String DRIVER_NAME = ConfigurationManager.get("mysql.driver");
+//    private static String DRIVER_NAME = ConfigurationManager.get("mysql.driver");
+    private static String DRIVER_NAME = ConfigurationManager.get("postgres.driver");
     private static DBConnectionPool instance;
     private static int clients;
     private String url, user, password;
