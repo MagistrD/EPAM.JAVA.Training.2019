@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="EPAM" />
         <module name="by.epam.hospital" />
+        <module name="EPAM.JAVA.Training.2019" />
         <module name="epam.task" />
       </profile>
     </annotationProcessing>
