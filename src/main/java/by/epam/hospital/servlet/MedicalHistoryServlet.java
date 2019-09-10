@@ -32,7 +32,7 @@ public class MedicalHistoryServlet extends HttpServlet {
             if (c.getName().equals("ID")) {
                 id = Integer.parseInt(c.getValue());
             }
-            if (c.getName().equals("subType")) {
+            if (c.getName().equals("subType") && !c.getValue().equals("")) {
                 subType = Integer.parseInt(c.getValue());
             }
         }
