@@ -50,14 +50,12 @@ by\epam\hospital\logic\DoctorLogic.class
 by\epam\hospital\command\ActionCommand.class
 by\epam\hospital\command\CommandEnum.class
 by\epam\hospital\entities\Staff.class
-by\epam\hospital\command\entitiesCommand\RegistrationCommand.class
 by\epam\hospital\command\CommandEnum$6.class
 by\epam\hospital\dao\AbstractDAO.class
 by\epam\hospital\command\entitiesCommand\NurseCommand.class
 by\epam\hospital\command\entitiesCommand\SpecializationCommand.class
 by\epam\hospital\dao\mysqldao\MySQLAppointmentTypeDAO.class
 by\epam\hospital\dao\mysqldao\MySQLMedicalHistoryDAO.class
-by\epam\hospital\servlet\RequestLoggingFilter.class
 by\epam\hospital\logic\AppointmentTypeLogic.class
 by\epam\hospital\command\CommandEnum$3.class
 by\epam\hospital\servlet\LoginServlet.class

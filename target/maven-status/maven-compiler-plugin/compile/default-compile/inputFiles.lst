@@ -2,7 +2,6 @@ D:\Developing\EPAM.JAVA.Training.2019\src\main\java\by\epam\hospital\command\Com
 D:\Developing\EPAM.JAVA.Training.2019\src\main\java\by\epam\hospital\dao\mysqldao\MySQLStaffDAO.java
 D:\Developing\EPAM.JAVA.Training.2019\src\main\java\by\epam\hospital\dao\mysqldao\MySQLAppointmentDAO.java
 D:\Developing\EPAM.JAVA.Training.2019\src\main\java\by\epam\hospital\dao\mysqldao\MySQLNurseDAO.java
-D:\Developing\EPAM.JAVA.Training.2019\src\main\java\by\epam\hospital\command\entitiesCommand\RegistrationCommand.java
 D:\Developing\EPAM.JAVA.Training.2019\src\main\java\by\epam\hospital\logic\RegistrationLogic.java
 D:\Developing\EPAM.JAVA.Training.2019\src\main\java\by\epam\hospital\servlet\MedicalHistoryServlet.java
 D:\Developing\EPAM.JAVA.Training.2019\src\main\java\by\epam\hospital\dao\mysqldao\MySQLPatientDAO.java
@@ -37,7 +36,6 @@ D:\Developing\EPAM.JAVA.Training.2019\src\main\java\by\epam\hospital\entities\Nu
 D:\Developing\EPAM.JAVA.Training.2019\src\main\java\by\epam\hospital\entities\Patient.java
 D:\Developing\EPAM.JAVA.Training.2019\src\main\java\by\epam\hospital\Main.java
 D:\Developing\EPAM.JAVA.Training.2019\src\main\java\by\epam\hospital\dao\AbstractDAO.java
-D:\Developing\EPAM.JAVA.Training.2019\src\main\java\by\epam\hospital\servlet\RequestLoggingFilter.java
 D:\Developing\EPAM.JAVA.Training.2019\src\main\java\by\epam\hospital\servlet\LogoutServlet.java
 D:\Developing\EPAM.JAVA.Training.2019\src\main\java\by\epam\hospital\dao\mysqldao\MySQLMedicalHistoryDAO.java
 D:\Developing\EPAM.JAVA.Training.2019\src\main\java\by\epam\hospital\entities\Appointment.java
