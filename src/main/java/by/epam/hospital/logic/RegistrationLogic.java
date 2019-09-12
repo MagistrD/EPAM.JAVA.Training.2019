@@ -47,7 +47,8 @@ public class RegistrationLogic {
         boolean flag = false;
         MySQLUserDAO mySQLUserDAO = new MySQLUserDAO();
         try {
-            flag = mySQLUserDAO.createUserWithID(username, password, createPatient(firstName, secondName, surname));
+            int i = createPatient(firstName, secondName, surname);
+            flag = mySQLUserDAO.createUserWithID(username, password, i);
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -50,7 +50,7 @@ CREATE TABLE "t_patient_users" (  "idt_patient_users" BIGSERIAL NOT NULL ,
   PRIMARY KEY ("idt_patient_users"),
   UNIQUE ("idt_patient_users"),
   UNIQUE ("t_patient_users_username"),
-  UNIQUE ("t_patient_users_patient_id"),FOREIGN KEY ("idt_patient_users") REFERENCES "t_patients" ( "idt_patients" ) ON UPDATE RESTRICT ON DELETE RESTRICT
+  UNIQUE ("t_patient_users_patient_id"),FOREIGN KEY ("t_patient_users_patient_id") REFERENCES "t_patients" ( "idt_patients" ) ON UPDATE RESTRICT ON DELETE RESTRICT
 ); 
 
 
