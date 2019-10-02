@@ -1,5 +1,7 @@
 package by.epam.hospital;
 
+import by.epam.hospital.entities.User;
+
 import java.io.IOException;
 
 public class Main {
@@ -29,8 +31,6 @@ public class Main {
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
-
-
 
     }
 }

@@ -33,7 +33,16 @@
                     for (var i = 0; i < data.length; i++) {
                         var child = data[i];
                         if (i === 0) {
-                            addHeaders(table, Object.keys(child));
+                            // addHeaders(table, Object.keys(child));
+                            var row = table.insertRow();
+                            row.insertCell().appendChild(document.createTextNode('Medical history'));
+                            row.insertCell().appendChild(document.createTextNode('Patient'));
+                            row.insertCell().appendChild(document.createTextNode('Diagnosed'));
+                            row.insertCell().appendChild(document.createTextNode('Date of receipt'));
+                            row.insertCell().appendChild(document.createTextNode('Date of discharged'));
+                            row.insertCell().appendChild(document.createTextNode('Diagnosis'));
+                            row.insertCell().appendChild(document.createTextNode('Comment'));
+                            row.insertCell().appendChild(document.createTextNode('Appointment'));
                         }
                         var row = table.insertRow();
                         Object.keys(child).forEach(function (k) {

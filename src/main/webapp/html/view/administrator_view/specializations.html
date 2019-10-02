@@ -53,7 +53,11 @@
 
                         var child = data[i];
                         if (i === 0) {
-                            addHeadersToSpecTable(table, Object.keys(child));
+                            // addHeadersToSpecTable(table, Object.keys(child));
+                            var row = table.insertRow();
+                            row.insertCell().appendChild(document.createTextNode('ID'));
+                            row.insertCell().appendChild(document.createTextNode('Name'));
+                            row.insertCell().appendChild(document.createTextNode('Type'));
                         }
                         var row = table.insertRow();
                         Object.keys(child).forEach(function (k) {

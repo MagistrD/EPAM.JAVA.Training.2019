@@ -163,7 +163,17 @@
                 for (var i = 0; i < data.length; i++) {
                     var child = data[i];
                     if (i === 0) {
-                        addHeaders(table, Object.keys(child));
+                        // addHeaders(table, Object.keys(child));
+                        var row = table.insertRow();
+                        row.insertCell().appendChild(document.createTextNode('Medical history'));
+                        row.insertCell().appendChild(document.createTextNode('Patient'));
+                        row.insertCell().appendChild(document.createTextNode('Diagnosed'));
+                        row.insertCell().appendChild(document.createTextNode('Date of receipt'));
+                        row.insertCell().appendChild(document.createTextNode('Date of discharged'));
+                        row.insertCell().appendChild(document.createTextNode('Diagnosis'));
+                        row.insertCell().appendChild(document.createTextNode('Comment'));
+                        row.insertCell().appendChild(document.createTextNode('Appointment'));
+
                     }
                     var row = table.insertRow();
                     Object.keys(child).forEach(function (k) {
@@ -222,16 +232,16 @@
 </br>
 <div>
     <div>
-        <label for="patients">Patient</label><select id="patients" name="patients"></select>
-        <label for="doctors">Doctor</label><select id="doctors" name="doctors"></select>
+        <label for="patients">Patient </label><select id="patients" name="patients"></select>
+        <label for="doctors">Doctor </label><select id="doctors" name="doctors"></select>
     </div>
     <div>
-        <label for="dateOfReceipt">Date of receipt</label><input type="date" id="dateOfReceipt">
-        <label for="dischargedDate">Date of discharge</label><input type="date" id="dischargedDate">
+        <label for="dateOfReceipt">Date of receipt </label><input type="date" id="dateOfReceipt">
+        <label for="dischargedDate">Date of discharge </label><input type="date" id="dischargedDate">
     </div>
     <div>
-        <label for="diagnosis">Diagnosis</label><input type="text" id="diagnosis">
-        <label for="comment">Comments</label><input type="text" id="comment">
+        <label for="diagnosis">Diagnosis </label><input type="text" id="diagnosis">
+        <label for="comment">Comments </label><input type="text" id="comment">
     </div>
 
     <input type="text" id="appointment" readonly>
@@ -250,11 +260,11 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <label>Description</label><input type="text" id="appointName">
-                    <label>Date of appointment</label><input type="date" id="dateOfAppointment">
-                    <label>Date of execution</label><input type="date" id="dateOdExecution">
-                    <select id="appointmentType" name="appointmentType"></select>
-                    <select id="executor" name="executor"></select>
+                    <label>Description </label><input type="text" id="appointName">
+                    <label>Date of appointment </label><input type="date" id="dateOfAppointment">
+                    <label>Date of execution </label><input type="date" id="dateOdExecution">
+                    <label for="appointmentType">Type of appointment </label><select id="appointmentType" name="appointmentType"></select>
+                    <label for="executor">Executor </label><select id="executor" name="executor"></select>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

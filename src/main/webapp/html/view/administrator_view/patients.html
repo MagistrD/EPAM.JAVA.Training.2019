@@ -35,7 +35,12 @@
 
                         var child = data[i];
                         if (i === 0) {
-                            addHeadersToPatientTable(table, Object.keys(child));
+                            // addHeadersToPatientTable(table, Object.keys(child));
+                            var row = table.insertRow();
+                            row.insertCell().appendChild(document.createTextNode('First name'));
+                            row.insertCell().appendChild(document.createTextNode('Second name'));
+                            row.insertCell().appendChild(document.createTextNode('Surname'));
+                            row.insertCell().appendChild(document.createTextNode('ID'));
                         }
                         var row = table.insertRow();
                         Object.keys(child).forEach(function (k) {
@@ -44,6 +49,7 @@
                             cell.appendChild(document.createTextNode(child[k]));
                         });
                     }
+
                     document.getElementById('patientsTable').appendChild(table);
                 }
             };

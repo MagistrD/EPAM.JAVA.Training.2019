@@ -48,10 +48,26 @@ public class RegistrationLogic {
         MySQLUserDAO mySQLUserDAO = new MySQLUserDAO();
         try {
             int i = createPatient(firstName, secondName, surname);
-            flag = mySQLUserDAO.createUserWithID(username, password, i);
+            flag = mySQLUserDAO.createUserWithID("patient", username, password, i);
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return flag;
     }
+
+    public static boolean createStaffUser(int id, String username, String password) {
+        boolean flag = false;
+        MySQLUserDAO mySQLUserDAO = new MySQLUserDAO();
+        try {
+            flag = mySQLUserDAO.createUserWithID("staff", username, password, id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return flag;
+    }
+
+
+//    public static boolean createStaffUser(int id, final String username, String password){
+//
+//    }
 }

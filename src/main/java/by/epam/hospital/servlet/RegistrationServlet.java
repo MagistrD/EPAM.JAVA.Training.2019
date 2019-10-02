@@ -15,6 +15,7 @@ import java.io.IOException;
 public class RegistrationServlet extends HttpServlet {
     @Override
     protected void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
+
         String firstName = req.getParameter("firstName");
         String secondName = req.getParameter("secondName");
         String surname = req.getParameter("surname");

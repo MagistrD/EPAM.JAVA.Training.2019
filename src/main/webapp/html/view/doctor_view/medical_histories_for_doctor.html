@@ -88,26 +88,6 @@
             return null;
         }
 
-        function createMedicalHistory() {
-            var history = new Object();
-
-            history.diagnosedID = document.getElementById("doctors").value;
-            history.patientID = parseInt(readCookie("id"));
-            history.dateOfReceipt = document.getElementById("dateOfAppoint").value;
-
-            history.appointmentID = null;
-
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "/controller?command=history", false);
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    alert("You have successfully signed up for a doctor!");
-                    getAllPatientHistories();
-                }
-            };
-            xhr.send(JSON.stringify(history));
-        }
-
         function historiesForThisDoctor() {
             var xhr = new XMLHttpRequest();
             xhr.open("POST", "/history", false);
@@ -120,7 +100,16 @@
                     for (var i = 0; i < data.length; i++) {
                         var child = data[i];
                         if (i === 0) {
-                            addHeaders(table, Object.keys(child));
+                            // addHeaders(table, Object.keys(child));
+                            var row = table.insertRow();
+                            row.insertCell().appendChild(document.createTextNode('Medical history'));
+                            row.insertCell().appendChild(document.createTextNode('Patient'));
+                            row.insertCell().appendChild(document.createTextNode('Diagnosed'));
+                            row.insertCell().appendChild(document.createTextNode('Date of receipt'));
+                            row.insertCell().appendChild(document.createTextNode('Date of discharged'));
+                            row.insertCell().appendChild(document.createTextNode('Diagnosis'));
+                            row.insertCell().appendChild(document.createTextNode('Comment'));
+                            row.insertCell().appendChild(document.createTextNode('Appointment'));
                         }
                         var row = table.insertRow();
                         Object.keys(child).forEach(function (k) {
@@ -147,10 +136,9 @@
             document.getElementById("comment").value = element.getElementsByTagName("td")[6].innerHTML;
             document.getElementById("appointment").value = element.getElementsByTagName("td")[7].innerHTML;
         }
-
     </script>
 </head>
-<body>
+<body class="container">
 <nav class="navbar navbar-dark bg-primary">
     <form action="/logout" method="post">
         <input type="submit" value="Logout" class="btn btn-primary">
@@ -181,11 +169,12 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <label>Description</label><input type="text" id="appointName">
-                    <label>Date of appointment</label><input type="date" id="dateOfAppointment">
-                    <label>Date of execution</label><input type="date" id="dateOdExecution">
-                    <select id="appointmentType" name="appointmentType"></select>
-                    <select id="executor" name="executor"></select>
+                    <label>Description </label><input type="text" id="appointName">
+                    <label>Date of appointment </label><input type="date" id="dateOfAppointment">
+                    <label>Date of execution </label><input type="date" id="dateOdExecution">
+                    <label for="appointmentType">Appointment type </label><select id="appointmentType"
+                                                                                  name="appointmentType"></select>
+                    <label for="executor">Executor </label><select id="executor" name="executor"></select>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -195,7 +184,6 @@
         </div>
     </div>
 
-    <button type="button" class="btn btn-primary" onclick="createMedicalHistory()">Sign up to the doctor</button>
 </div>
 </br>
 <div>

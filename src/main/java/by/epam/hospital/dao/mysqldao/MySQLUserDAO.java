@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * DAO for Users
@@ -105,23 +106,32 @@ public class MySQLUserDAO implements AbstractDAO<Integer, User> {
      * @return is create
      * @throws SQLException sql exception
      */
-    public boolean createUserWithID(final String username, final String password, final int id) throws SQLException {
+    public boolean createUserWithID(String type, final String username, final String password, final int id) throws SQLException {
         boolean flag = false;
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         try {
             connection = CONNECTION_POOL.getConnection();
-            preparedStatement = connection.prepareStatement(ConfigurationManager.
-                    get("registration.create.patient.user"));
-            preparedStatement.setString(1, username);
-            preparedStatement.setString(2, password);
-            preparedStatement.setInt(3, id);
-            preparedStatement.execute();
-            flag = true;
+            if (type.equals("patient")) {
+                preparedStatement = connection.prepareStatement(ConfigurationManager.
+                        get("registration.create.patient.user"));
+                preparedStatement.setString(1, username);
+                preparedStatement.setString(2, password);
+                preparedStatement.setInt(3, id);
+                preparedStatement.execute();
+                flag = true;
+            } else if (type.equals("staff")) {
+                preparedStatement = connection.prepareStatement(ConfigurationManager.get("registration.create.staff.user"));
+                preparedStatement.setString(1, username);
+                preparedStatement.setString(2, password);
+                preparedStatement.setInt(3, id);
+                preparedStatement.execute();
+                flag = true;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            preparedStatement.close();
+            Objects.requireNonNull(preparedStatement).close();
             connection.close();
         }
 
